@@ -1,0 +1,42 @@
+[Use this template for your project proposal. Then produce a PDF version and submit it]
+
+Project Title
+
+PROPOSAL
+
+Pi Lanningham Dhia Barnes Lani M'cleod
+pi.lanningham@nyu.edu drb282@nyu.edu irm238@nyu.edu
+
+
+What is the problem you want to solve and who has this problem?
+
+Write a well defined problem statement. I does not need to be long but it does need to be clear.
+
+What questions do you want to be able to answer with your visualization?
+
+Make a list of questions you want to be able to answer with your data analysis and visualization. Make a list starting with each question followed by a more detailed description of what the question means. This should be expressed in the domain language, not in abstract terms (for instance I prefer something like "find customers with a similar behavior" than "cluster the data points according to their similarity")
+
+What is your data about? Where does it come from? What attributes are you going to use? What is their meaning? What are their attribute types (data abstraction)? Do you plan to generate derived attributes? If yes, which and why?
+​​
+Do NOT list all the attributes from your dataset
+List only the attributes that you plan to use in your visualization
+Do NOT just make a dump of your data schema
+Create one table (or more if needed) with the following columns: attribute names, attribute type, description of what the attribute means (what real-world entity does it represent?), value range (if quantitative) or categories (if categorical). Also specify is an attribute is derived.
+
+What have others done to solve this or related problems?
+
+Search for related works and explain how they are related to your work.
+
+What solution do you propose? How does the solution help you answer the questions stated above?
+
+​Each student must submit a project mock-up independently. The mockup can be drawn by hand or using a digital drawing software.
+All the team members have to meet and discuss a common solution and submit this common solution stating why you believe is a good solution for your problem.
+First explain how to read the visualization, then explain how it helps answering the questions of your project.
+
+How do you plan to verify whether you have met your goals with this project?
+​
+Provide your own thoughts on how you plan to validate your projects
+
+How is your project team going to work on the project? Who is going to do what?
+
+​Explain how you are going to coordinate the work in the team.
