@@ -1,0 +1,11 @@
+
+#eventList ul {
+  columns: 5;
+  -webkit-columns: 5;
+  -moz-columns: 5;
+}
+
+#eventList li.selected {
+  background-color: green;
+  color: white;
+}
