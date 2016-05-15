@@ -1,11 +1,19 @@
-
-#eventList ul {
-  columns: 5;
-  -webkit-columns: 5;
-  -moz-columns: 5;
+body {
+  padding-bottom: 325px;
 }
 
-#eventList li.selected {
-  background-color: green;
-  color: white;
+.legend-footer {
+  overflow-y: scroll;
+  border-top: 1px solid black;
+  box-sizing: border-box;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 325px;
+  background-color: white;
 }
+/*
+.group {
+  overflow-x: scroll;
+  white-space: nowrap;
+}*/
