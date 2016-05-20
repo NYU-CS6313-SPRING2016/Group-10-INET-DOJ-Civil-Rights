@@ -222,8 +222,12 @@
         .selectAll('rect')
         .attr('x', function(entry) { return (entryRadius) - ((+scale(entry) / 2) || entryRadius / 2); })
         .attr('y', function(entry) { return (entryRadius) - ((+scale(entry) / 2) || entryRadius / 2); })
-        .attr(attrA, function(entry) { return scale(entry); })
-        .attr(attrB, function(entry) { return scale(entry); });
+        .attr(attrA, function(entry) { return scale(entry); });
+      if(attrB) {
+        legendEntries
+          .selectAll('rect')
+          .attr(attrB, function(entry) { return scale(entry); });        
+      }
 
       legendEntries.exit().remove();
       legendEntries.order();

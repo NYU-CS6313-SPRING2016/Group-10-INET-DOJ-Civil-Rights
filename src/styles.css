@@ -1,6 +1,25 @@
 body {
-  padding-bottom: 325px;
+  padding-bottom: 125px;
 }
+
+/*
+LOOKS REALLY UGLY, TURN ON AT YOUR OWN RISK
+.dropdown-labels {
+  position: fixed;
+  top: 0px;
+  width: 100%;
+  background-color: white;
+}
+.dropdowns {
+  position: fixed;
+  top: 75px;
+  width: 100%;
+  background-color: white;
+  padding-bottom: 10px;
+  border-bottom: 1px solid black;
+  box-sizing: border-box;
+}
+*/
 
 .legend-footer {
   overflow-y: scroll;
