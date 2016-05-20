@@ -6,10 +6,11 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css" />
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/js/jquery.tooltipster.js"></script>
+    <link rel="stylesheet" type="text/css" src="https://cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/css/themes/tooltipster-light.css"></script>
   </head>
   <body>
     <div class="container-fluid">
-      <h1> CS6313 Final Project - Racial Tension in Media </h1>
       <div class="row dropdown-labels">
         <div class="col-md-2"><h2>Groups</h2></div>
         <div class="col-md-2"><h2>Color</h2></div>
@@ -49,18 +50,33 @@
       <div class="row main">
         <div class="col-md-9 grid">
         </div>
-        <div class="col-md-3 details">
+        <div class="col-md-3 details hidden">
+          <h3>Name</h3>
+          <div id="name-details">Name</div>
+          <h3>Age</h3>
+          <div id="age-details">Age</div>
+          <h3>Race / Ethnicity</h3>
+          <div id="race-details">Race</div>
+          <h3>State</h3>
+          <div id="place-details">Place</div>
+          <h3>Gender</h3>
+          <div id="gender-details">Gender</div>
+          <h3>Manner of Death</h3>
+          <div id="manner-details">Method</div>
+          <h3>Volume of Articles</h3>
+          <div id="volume-details">Volume</div>
+          <h3>Average Tone of Articles</h3>
+          <div id="tone-details">Tone</div>
         </div>
       </div>
       <div class="row legend-footer">
-          <h2>Legend<h2>
-        <div class="row legend-size">
+        <div class="col-md-6">
           <div class="col-md-1"><h3>Size</h3></div>
-          <div class="col-md-11 legend"></div>
+          <div class="col-md-11 legend-size legend"></div>
         </div>
-        <div class="row legend-color">
+        <div class="col-md-6">
           <div class="col-md-1"><h3>Color</h3></div>
-          <div class="col-md-11 legend"></div>
+          <div class="col-md-11 legend-color legend"></div>
         </div>
       </div>
     </div>
@@ -133,7 +149,9 @@
 
     var deaths = [];
     var deathsByGroup = {};
-    
+    var selectedDeath = null;
+
+    var maxRadius = 25;    
     var radiusScale, colorScale;
 
     // Helper functions
@@ -166,8 +184,9 @@
     var currentSortingKey = keys.monthIndex;
     var currentSortDirection = "ascending";
 
-    function renderLegend(legend, entries, scale, attr) {
-      var entryWidth = 300;
+    function renderLegend(legend, entries, scale, attrA, attrB) {
+      var entryWidth = 100;
+      var entryRadius = entryWidth / 2;
       var legendEntries = 
         legend
           .selectAll('.legend-step')
@@ -176,25 +195,30 @@
         .append('svg')
         .attr('class', 'legend-step')
         .attr('width', entryWidth)
-        .attr('height', 125);
+        .attr('height', entryWidth);
       legendEntering
-        .append('circle')
-        .attr('cx', entryWidth / 2)
-        .attr('cy', 75)
+        .append('rect')
         .attr('fill', 'black')
-        .attr('r', 25);
+        .attr('width', entryRadius)
+        .attr('rx', 3)
+        .attr('ry', 3)
+        .attr('height', entryRadius);
       legendEntering
         .append('text')
         .attr('x', entryWidth / 2)
         .attr('y', 15)
+        .attr('font-size', 10)
         .attr('dy', '.35em')
         .attr('fill', 'black')
         .attr('text-anchor', 'middle')
         .text(d3.identity);
         
       legendEntries
-        .selectAll('circle')
-        .attr(attr, function(entry) { return scale(entry); });
+        .selectAll('rect')
+        .attr('x', function(entry) { return (entryRadius) - ((+scale(entry) / 2) || entryRadius / 2); })
+        .attr('y', function(entry) { return (entryRadius) - ((+scale(entry) / 2) || entryRadius / 2); })
+        .attr(attrA, function(entry) { return scale(entry); })
+        .attr(attrB, function(entry) { return scale(entry); });
 
       legendEntries.exit().remove();
       legendEntries.order();
@@ -250,7 +274,7 @@
       radiusScale = 
         d3.scale.linear()
           .domain(d3.extent(deaths, currentSizeKey))
-          .range([5,45])
+          .range([5,maxRadius])
           .clamp(true);
     }
 
@@ -332,16 +356,24 @@
         deaths.enter()
               .append('svg')
               .attr('class', 'deaths')
-              .attr('width', 100)
-              .attr('height', 100)
-              .append('circle')
-              .attr('cx', 50)
-              .attr('cy', 50);
+              .attr('width', maxRadius * 2)
+              .attr('height', maxRadius * 2)
+              .append('rect', maxRadius)
+              .attr('rx', 3)
+              .attr('ry', 3)
+              .on('click', focus)
+              .append('title')
+              .text(function(death) { return death.name; });
 
       // Set the radius to our radius key and the color to our color key
-      deaths.selectAll('circle')
-        .attr('r', function(death) { return radiusScale(currentSizeKey(death)); })
-        .attr('fill', function(death) { return colorScale(currentColorKey(death));});
+      deaths.selectAll('rect')
+        .attr('x', function(death) { return maxRadius - radiusScale(currentSizeKey(death)); })
+        .attr('y', function(death) { return maxRadius - radiusScale(currentSizeKey(death)); })
+        .attr('width', function(death) { return 2*radiusScale(currentSizeKey(death)); })
+        .attr('height', function(death) { return 2*radiusScale(currentSizeKey(death)); })
+        .attr('fill', function(death) { return colorScale(currentColorKey(death));})
+        .attr('stroke', "black")
+        .attr('stroke-width', function(death) { return death === selectedDeath ? 3 : 0; });
         
       var deathsExiting =
         deaths.exit()
@@ -352,12 +384,26 @@
       
       // Set up the size legend: choose the steps we want, and run it backwards through the radius scale
       var round = function(x) { return d3.round(x, 2); }
-      var sizeLegendSteps = [5, 15, 25, 35, 45].map(radiusScale.invert).map(round);
-      renderLegend(d3.select('.legend-size'), sizeLegendSteps, radiusScale, 'r');
+      var sizeLegendSteps = [5, 10, 15, 20, 25].map(radiusScale.invert).map(round);
+      renderLegend(d3.select('.legend-size'), sizeLegendSteps, function(entry) { return 2*radiusScale(entry); }, 'width', 'height');
       
       // Set up the color legend
       renderCurrentColorLegend();
     }
-
+    
+    function focus(death) {
+      selectedDeath = death;
+      console.log(death);
+      $(".details").removeClass("hidden");
+      $("#name-details").text(death.name);
+      $("#age-details").text(death.age);
+      $("#race-details").text(death.raceethnicity);
+      $("#place-details").text(stateNames[death.state]);
+      $("#gender-details").text(death.gender);
+      $("#manner-details").text(death.classification);
+      $("#volume-details").text(death.volume);
+      $("#tone-details").text(death.tone || d3.random.normal(.5, .5)());
+      render();
+    }
   </script>
 </html>
