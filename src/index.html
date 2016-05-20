@@ -24,6 +24,7 @@
       <div class="row dropdowns">
         <div class="col-md-2">
           <select id="groupingSelection">
+            <option value="all">No grouping</option>
             <option value="place">Place</option>
             <option value="race">Race</option>
             <option value="manner">Manner of Death</option>
@@ -161,6 +162,7 @@
 
     // Helper functions
     var keys = {
+      all: function(death)  { return "All"; },
       place: function(death) { return stateNames[death.state]; },
       race: function(death) { return death.raceethnicity; },
       manner: function(death) { return death.classification; },
@@ -183,7 +185,7 @@
       tone: "ascending"
     }
 
-    var currentGroupingKey = keys.place;
+    var currentGroupingKey = keys.all;
     var currentColorKey = keys.race;
     var currentSizeKey = keys.volume;
     var currentSortingKey = keys.monthIndex;
