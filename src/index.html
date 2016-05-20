@@ -16,6 +16,10 @@
         <div class="col-md-2"><h2>Color</h2></div>
         <div class="col-md-2"><h2>Size</h2></div>
         <div class="col-md-2"><h2>Order</h2></div>
+        <div class="project-title col-md-3 col-md-offset-1">
+          <h2>Media Coverage Explorer</h2>
+          <p class="subtitle">Exploration of news articles on "The Counted" dataset</p>
+        </div>
       </div>
       <div class="row dropdowns">
         <div class="col-md-2">
@@ -50,7 +54,8 @@
       <div class="row main">
         <div class="col-md-9 grid">
         </div>
-        <div class="col-md-3 details hidden">
+        <div class="details hidden">
+          <h2> Details </h2>
           <h3>Name</h3>
           <div id="name-details">Name</div>
           <h3>Age</h3>
@@ -339,7 +344,7 @@
         groups.enter()
               .append('div')
               .attr('class', 'row group')
-              .append('h3').text(function(group) { return group.key; });
+              .append('h3').text(function(group) { return group.key + " (" + group.values.length + ")"; });
       
       // Remove groups that don't exist anymore
       var groupsExiting =

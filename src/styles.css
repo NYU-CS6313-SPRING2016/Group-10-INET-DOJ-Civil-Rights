@@ -16,6 +16,12 @@ body {
 .hidden {
   visibility: hidden
 }
+
+.details {
+  position: fixed;
+  right: 0px;
+  width: 25%;
+}
 /*
 .group {
   overflow-x: scroll;
