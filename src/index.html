@@ -11,45 +11,49 @@
   </head>
   <body>
     <div class="container-fluid">
-      <div class="row dropdown-labels">
-        <div class="col-md-2"><h2>Groups</h2></div>
-        <div class="col-md-2"><h2>Color</h2></div>
-        <div class="col-md-2"><h2>Size</h2></div>
-        <div class="col-md-2"><h2>Order</h2></div>
-        <div class="project-title col-md-3 col-md-offset-1">
+      <div class="row dropdowns">
+        <div class="col-md-9">
+          <div class="row labels">
+            <div class="col-md-2"><h2>Groups</h2></div>
+            <div class="col-md-2"><h2>Color</h2></div>
+            <div class="col-md-2"><h2>Size</h2></div>
+            <div class="col-md-2"><h2>Order</h2></div>
+          </div>
+          <div class="row config">
+            <div class="col-md-2">
+              <select id="groupingSelection">
+                <option value="all">No grouping</option>
+                <option value="place" selected="selected">Place</option>
+                <option value="race">Race</option>
+                <option value="manner">Manner of Death</option>
+                <option value="month">Month of Death</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <select id="colorSelection">
+                <option value="race">Race</option>
+                <option value="manner">Manner of Death</option>
+                <option value="tone">Tone of Articles</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <select id="sizeSelection">
+                <option value="volume">Volume of Articles</option>
+                <option value="tone">Tone of Articles</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <select id="orderingSelection">
+                <option value="monthIndex">Month of Death</option>
+                <option value="volume">Volume of Articles</option>
+                <option value="tone">Tone of Articles</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="project-title col-md-3">
           <h2>Media Coverage Explorer</h2>
           <p class="subtitle">Exploration of News Articles on '15/'16 Deaths in US Police Custody</p>
-        </div>
-      </div>
-      <div class="row dropdowns">
-        <div class="col-md-2">
-          <select id="groupingSelection">
-            <option value="all">No grouping</option>
-            <option value="place" selected="selected">Place</option>
-            <option value="race">Race</option>
-            <option value="manner">Manner of Death</option>
-            <option value="month">Month of Death</option>
-          </select>
-        </div>
-        <div class="col-md-2">
-          <select id="colorSelection">
-            <option value="race">Race</option>
-            <option value="manner">Manner of Death</option>
-            <option value="tone">Tone of Articles</option>
-          </select>
-        </div>
-        <div class="col-md-2">
-          <select id="sizeSelection">
-            <option value="volume">Volume of Articles</option>
-            <option value="tone">Tone of Articles</option>
-          </select>
-        </div>
-        <div class="col-md-2">
-          <select id="orderingSelection">
-            <option value="monthIndex">Month of Death</option>
-            <option value="volume">Volume of Articles</option>
-            <option value="tone">Tone of Articles</option>
-          </select>
         </div>
       </div>
       <div class="row main">
@@ -172,7 +176,7 @@
     }
     var sortDirections = {
       monthIndex: "ascending",
-      volume: "descending",
+      volume: "ascending",
       tone: "ascending" 
     }
 
