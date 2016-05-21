@@ -90,6 +90,20 @@ option {
     color: #fff;
 }
 
+.details ul {
+    columns: 2;
+    -webkit-columns: 2;
+    -moz-columns: 2;
+}
+
+.details li {
+    list-style-type: none;
+}
+
+.details a {
+    color: white;
+}
+
 .legend-footer {
     overflow-y: scroll;
     border-top: 1px solid black;

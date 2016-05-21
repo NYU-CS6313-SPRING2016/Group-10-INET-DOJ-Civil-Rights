@@ -76,8 +76,11 @@
           <div id="volume-details">Volume</div>
           <h3>Average Tone of Articles</h3>
           <div id="tone-details">Tone</div>
-          <h3>Relevant Articles</h3>
-          <div id="article-details"></div>
+          <h3 id="article-header">Relevant Articles</h3>
+          <div id="article-details">
+            <ul>
+            </ul>
+          </div>
         </div>
       </div>
       <div class="row legend-footer">
@@ -160,6 +163,8 @@
 
     var deaths = [];
     var deathsByGroup = {};
+    var articles = [];
+    var articlesByUID = {};
     var selectedDeath = null;
 
     var maxRadius = 25;    
@@ -315,6 +320,26 @@
       
       refreshData();
     });
+    
+    d3.csv('data/SourcesCombined.csv', function(err, result) {
+      if(err) {
+        console.error('Error loading sources: ', err);
+      }
+      articles = result;
+      
+      for(var i = 0; i < articles.length; i++) {
+        var article = articles[i];
+        if(!articlesByUID.hasOwnProperty(article.uid)) {
+          articlesByUID[article.uid] = [];
+        }
+        articlesByUID[article.uid].push(article);
+      }
+      
+      console.log('Articles loaded');
+      if(selectedDeath) {
+        focus(selectedDeath);
+      }
+    });
 
     function refreshData() {
       recomputeRadiusScale();
@@ -399,11 +424,10 @@
       
       // Set up the color legend
       renderCurrentColorLegend();
-    }
+          }
     
     function focus(death) {
       selectedDeath = death;
-      console.log(death);
       $(".details").removeClass("hidden");
       $("#name-details").text(death.name);
       $("#age-details").text(death.age);
@@ -413,6 +437,26 @@
       $("#manner-details").text(death.classification);
       $("#volume-details").text(death.volume);
       $("#tone-details").text(death.tone || d3.random.normal(.5, .5)());
+      
+      console.log(articlesByUID);
+      
+      if(articlesByUID[death.uid]) {
+        $('#article-header').text('Relevant Articles (' + articlesByUID[death.uid].length + ')');
+        
+        var articles = 
+          d3.select('#article-details ul')
+            .selectAll('li')
+            .data(articlesByUID[death.uid], function(article) { return article.di; });
+        var articlesEntering = 
+          articles.enter()
+                  .append('li')
+                  .append('a')
+                  .attr('href', function(article) { return article.di; })
+                  .text(function(article) { return article.SCN; });
+        var articlesExiting =
+          articles.exit()
+                  .remove();
+      }
       render();
     }
   </script>
