@@ -11,67 +11,111 @@
   </head>
   <body>
     <div class="container-fluid">
-      <div class="row dropdown-labels">
-        <div class="col-md-2"><h2>Groups</h2></div>
-        <div class="col-md-2"><h2>Color</h2></div>
-        <div class="col-md-2"><h2>Size</h2></div>
-        <div class="col-md-2"><h2>Order</h2></div>
-        <div class="project-title col-md-3 col-md-offset-1">
-          <h2>Media Coverage Explorer</h2>
-          <p class="subtitle">Exploration of news articles on "The Counted" dataset</p>
-        </div>
-      </div>
       <div class="row dropdowns">
-        <div class="col-md-2">
-          <select id="groupingSelection">
-            <option value="all">No grouping</option>
-            <option value="place" selected="selected">Place</option>
-            <option value="race">Race</option>
-            <option value="manner">Manner of Death</option>
-            <option value="month">Month of Death</option>
-          </select>
+        <div class="col-md-9">
+          <div class="row labels">
+            <div class="col-md-2"><h2>Groups</h2></div>
+            <div class="col-md-2"><h2>Color</h2></div>
+            <div class="col-md-2"><h2>Size</h2></div>
+            <div class="col-md-2"><h2>Order</h2></div>
+          </div>
+          <div class="row config">
+            <div class="col-md-2">
+              <select id="groupingSelection">
+                <option value="all">No grouping</option>
+                <option value="place" selected="selected">Place</option>
+                <option value="race">Race</option>
+                <option value="manner">Manner of Death</option>
+                <option value="month">Month of Death</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <select id="colorSelection">
+                <option value="race">Race</option>
+                <option value="manner">Manner of Death</option>
+                <option value="tone">Tone of Articles</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <select id="sizeSelection">
+                <option value="volume">Volume of Articles</option>
+                <option value="tone">Tone of Articles</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <select id="orderingSelection">
+                <option value="monthIndex">Month of Death</option>
+                <option value="volume">Volume of Articles</option>
+                <option value="tone">Tone of Articles</option>
+              </select>
+            </div>
+          </div>
         </div>
-        <div class="col-md-2">
-          <select id="colorSelection">
-            <option value="race">Race</option>
-            <option value="manner">Manner of Death</option>
-            <option value="tone">Tone of Articles</option>
-          </select>
-        </div>
-        <div class="col-md-2">
-          <select id="sizeSelection">
-            <option value="volume">Volume of Articles</option>
-            <option value="tone">Tone of Articles</option>
-          </select>
-        </div>
-        <div class="col-md-2">
-          <select id="orderingSelection">
-            <option value="monthIndex">Month of Death</option>
-            <option value="volume">Volume of Articles</option>
-            <option value="tone">Tone of Articles</option>
-          </select>
+        <div class="project-title col-md-3">
+          <h2>Media Coverage Explorer</h2>
+          <p class="subtitle">Exploration of News Articles on '15/'16 Deaths in US Police Custody</p>
         </div>
       </div>
       <div class="row main">
         <div class="col-md-9 grid">
         </div>
         <div class="details hidden">
-          <h3>Name</h3>
-          <div id="name-details">Name</div>
-          <h3>Age</h3>
-          <div id="age-details">Age</div>
-          <h3>Race / Ethnicity</h3>
-          <div id="race-details">Race</div>
-          <h3>State</h3>
-          <div id="place-details">Place</div>
-          <h3>Gender</h3>
-          <div id="gender-details">Gender</div>
-          <h3>Manner of Death</h3>
-          <div id="manner-details">Method</div>
-          <h3>Volume of Articles</h3>
-          <div id="volume-details">Volume</div>
-          <h3>Average Tone of Articles</h3>
-          <div id="tone-details">Tone</div>
+          <div class="row">
+            <div class="col-md-6">
+              <h3>Name</h3>
+              <div id="name-details">Name</div>
+            </div>
+            <div class="col-md-6">
+              <h3>Age</h3>
+              <div id="age-details">Age</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <h3>Race / Ethnicity</h3>
+              <div id="race-details">Race</div>
+            </div>
+            <div class="col-md-6">
+              <h3>Gender</h3>
+              <div id="gender-details">Gender</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <h3>State</h3>
+              <div id="place-details">Place</div>
+            </div>
+            <div class="col-md-6">            
+              <h3>City</h3>
+              <div id="city-details">City</div>
+            </div>              
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <h3>Manner of Death</h3>
+              <div id="manner-details">Method</div>
+            </div>
+            <div class="col-md-6">
+              <h3>Enforcement Agency</h3>
+              <div id="agency-details">Agency</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <h3>Volume of Articles</h3>
+              <div id="volume-details">Volume</div>
+            </div>
+            <div class="col-md-6">
+              <h3>Average Tone of Articles</h3>
+              <div id="tone-details">Tone</div>
+            </div>
+          </div>
+          <h3 id="article-header">Relevant Articles</h3>
+          <div id="article-details">
+            <h4 id="article-loading-indicator">Loading...</h4>
+            <ul>
+            </ul>
+          </div>
         </div>
       </div>
       <div class="row legend-footer">
@@ -154,6 +198,8 @@
 
     var deaths = [];
     var deathsByGroup = {};
+    var articles = [];
+    var articlesByUID = {};
     var selectedDeath = null;
 
     var maxRadius = 25;    
@@ -172,7 +218,7 @@
     }
     var sortDirections = {
       monthIndex: "ascending",
-      volume: "descending",
+      volume: "ascending",
       tone: "ascending" 
     }
 
@@ -279,8 +325,7 @@
       radiusScale = 
         d3.scale.linear()
           .domain(d3.extent(deaths, currentSizeKey))
-          .range([5,maxRadius-5])
-          .clamp(true);
+          .range([5,maxRadius-5]);
     }
 
     function recomputeColorScale() {
@@ -309,6 +354,27 @@
       deaths = result;
       
       refreshData();
+    });
+    
+    d3.csv('data/SourcesCombined.csv', function(err, result) {
+      if(err) {
+        console.error('Error loading sources: ', err);
+      }
+      $('#article-loading-indicator').hide();
+      articles = result;
+      
+      for(var i = 0; i < articles.length; i++) {
+        var article = articles[i];
+        if(!articlesByUID.hasOwnProperty(article.uid)) {
+          articlesByUID[article.uid] = [];
+        }
+        articlesByUID[article.uid].push(article);
+      }
+      
+      if(selectedDeath) {
+        focus(selectedDeath);
+      }
+        
     });
 
     function refreshData() {
@@ -377,7 +443,7 @@
         .attr('width', function(death) { return 2*radiusScale(currentSizeKey(death)); })
         .attr('height', function(death) { return 2*radiusScale(currentSizeKey(death)); })
         .attr('fill', function(death) { return colorScale(currentColorKey(death));})
-        .attr('stroke-width', function(death) { return death === selectedDeath ? '8px' : '3px'; })
+        .attr('stroke-width', function(death) { return death === selectedDeath ? '3px' : '0px'; })
         .attr('stroke', "#3d3d4c");
         
       var deathsExiting =
@@ -398,16 +464,36 @@
     
     function focus(death) {
       selectedDeath = death;
-      console.log(death);
       $(".details").removeClass("hidden");
       $("#name-details").text(death.name);
       $("#age-details").text(death.age);
       $("#race-details").text(death.raceethnicity);
       $("#place-details").text(stateNames[death.state]);
+      $("#city-details").text(death.city);
       $("#gender-details").text(death.gender);
       $("#manner-details").text(death.classification);
+      $("#agency-details").text(death.lawenforcementagency);
       $("#volume-details").text(death.volume);
       $("#tone-details").text(death.tone || d3.random.normal(.5, .5)());
+            
+      if(articlesByUID[death.uid]) {
+        $('#article-header').text('Relevant Articles (' + articlesByUID[death.uid].length + ')');
+        
+        var articles = 
+          d3.select('#article-details ul')
+            .selectAll('li')
+            .data(articlesByUID[death.uid], function(article) { return article.di; });
+        var articlesEntering = 
+          articles.enter()
+                  .append('li')
+                  .append('a')
+                  .attr('href', function(article) { return article.di; })
+                  .attr('target', '_blank')
+                  .text(function(article) { return article.SCN; });
+        var articlesExiting =
+          articles.exit()
+                  .remove();
+      }
       render();
     }
   </script>
