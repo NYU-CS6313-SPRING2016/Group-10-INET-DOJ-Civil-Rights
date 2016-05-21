@@ -424,7 +424,7 @@
       
       // Set up the color legend
       renderCurrentColorLegend();
-          }
+    }
     
     function focus(death) {
       selectedDeath = death;
@@ -452,6 +452,7 @@
                   .append('li')
                   .append('a')
                   .attr('href', function(article) { return article.di; })
+                  .attr('target', '_blank')
                   .text(function(article) { return article.SCN; });
         var articlesExiting =
           articles.exit()
