@@ -1,69 +1,305 @@
+<!DOCTYPE html>
 <html>
   <head>
+    <script src="https://code.jquery.com/jquery-2.2.3.min.js"   integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="   crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="styles.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.min.js"></script>
-    <script   src="https://code.jquery.com/jquery-2.2.3.min.js"   integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="   crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/js/jquery.tooltipster.js"></script>
+    <link rel="stylesheet" type="text/css" src="https://cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/css/themes/tooltipster-light.css"></script>
   </head>
   <body>
-    <div id="graph">
-      <ul>
-
-      </ul>
-    </div>
-    <div id="layers">
-      <a id="eventArticles">Event articles</a>
-      <a id="subsequentArticles">Subsequent articles</a>
-      <a id="eventSources">Event sources</a>
-      <a id="subsequentSources">Subsequent sources</a>
-    </div>
-    <div id="filters">
-      <div id="deathClassification">
+    <div class="container-fluid">
+      <div class="row dropdown-labels">
+        <div class="col-md-2"><h2>Groups</h2></div>
+        <div class="col-md-2"><h2>Color</h2></div>
+        <div class="col-md-2"><h2>Size</h2></div>
+        <div class="col-md-2"><h2>Order</h2></div>
+        <div class="project-title col-md-3 col-md-offset-1">
+          <h2>Media Coverage Explorer</h2>
+          <p class="subtitle">Exploration of news articles on "The Counted" dataset</p>
+        </div>
       </div>
-      <div id="state">
+      <div class="row dropdowns">
+        <div class="col-md-2">
+          <select id="groupingSelection">
+            <option value="all">No grouping</option>
+            <option value="place" selected="selected">Place</option>
+            <option value="race">Race</option>
+            <option value="manner">Manner of Death</option>
+            <option value="month">Month of Death</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <select id="colorSelection">
+            <option value="race">Race</option>
+            <option value="manner">Manner of Death</option>
+            <option value="tone">Tone of Articles</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <select id="sizeSelection">
+            <option value="volume">Volume of Articles</option>
+            <option value="tone">Tone of Articles</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <select id="orderingSelection">
+            <option value="monthIndex">Month of Death</option>
+            <option value="volume">Volume of Articles</option>
+            <option value="tone">Tone of Articles</option>
+          </select>
+        </div>
       </div>
-      <div id="armed">
+      <div class="row main">
+        <div class="col-md-9 grid">
+        </div>
+        <div class="details hidden">
+          <h3>Name</h3>
+          <div id="name-details">Name</div>
+          <h3>Age</h3>
+          <div id="age-details">Age</div>
+          <h3>Race / Ethnicity</h3>
+          <div id="race-details">Race</div>
+          <h3>State</h3>
+          <div id="place-details">Place</div>
+          <h3>Gender</h3>
+          <div id="gender-details">Gender</div>
+          <h3>Manner of Death</h3>
+          <div id="manner-details">Method</div>
+          <h3>Volume of Articles</h3>
+          <div id="volume-details">Volume</div>
+          <h3>Average Tone of Articles</h3>
+          <div id="tone-details">Tone</div>
+        </div>
       </div>
-      <div id="source">
+      <div class="row legend-footer">
+        <div class="col-md-5">
+          <div class="col-md-1"><h3>Size</h3></div>
+          <div class="col-md-11 legend-size legend"></div>
+        </div>
+        <div class="col-md-7">
+          <div class="col-md-1"><h3>Color</h3></div>
+          <div class="col-md-11 legend-color legend"></div>
+        </div>
       </div>
-      <div id="race">
-      </div>
-      <div id="gender">
-      </div>
-    </div>
-    <div id="legend">
-    </div>
-    <div id="eventList">
-      <input id="eventFilter" type="text" />
-      <button id="selectAll">Select All</button>
-      <button id="selectNone">Select None</button>
-      <ul>
-      </ul>
     </div>
   </body>
   <script type="text/javascript">
 
+    d3.identity = function(x) { return x; }
+    var months = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+    var stateNames = {
+      "AL": "Alabama",
+      "AK": "Alaska",
+      "AS": "American Samoa",
+      "AZ": "Arizona",
+      "AR": "Arkansas",
+      "CA": "California",
+      "CO": "Colorado",
+      "CT": "Connecticut",
+      "DE": "Delaware",
+      "DC": "District Of Columbia",
+      "FM": "Federated States Of Micronesia",
+      "FL": "Florida",
+      "GA": "Georgia",
+      "GU": "Guam",
+      "HI": "Hawaii",
+      "ID": "Idaho",
+      "IL": "Illinois",
+      "IN": "Indiana",
+      "IA": "Iowa",
+      "KS": "Kansas",
+      "KY": "Kentucky",
+      "LA": "Louisiana",
+      "ME": "Maine",
+      "MH": "Marshall Islands",
+      "MD": "Maryland",
+      "MA": "Massachusetts",
+      "MI": "Michigan",
+      "MN": "Minnesota",
+      "MS": "Mississippi",
+      "MO": "Missouri",
+      "MT": "Montana",
+      "NE": "Nebraska",
+      "NV": "Nevada",
+      "NH": "New Hampshire",
+      "NJ": "New Jersey",
+      "NM": "New Mexico",
+      "NY": "New York",
+      "NC": "North Carolina",
+      "ND": "North Dakota",
+      "MP": "Northern Mariana Islands",
+      "OH": "Ohio",
+      "OK": "Oklahoma",
+      "OR": "Oregon",
+      "PW": "Palau",
+      "PA": "Pennsylvania",
+      "PR": "Puerto Rico",
+      "RI": "Rhode Island",
+      "SC": "South Carolina",
+      "SD": "South Dakota",
+      "TN": "Tennessee",
+      "TX": "Texas",
+      "UT": "Utah",
+      "VT": "Vermont",
+      "VI": "Virgin Islands",
+      "VA": "Virginia",
+      "WA": "Washington",
+      "WV": "West Virginia",
+      "WI": "Wisconsin",
+      "WY": "Wyoming"
+    };
+
     var deaths = [];
-    var months = ["January", "February", "March", "April", "May", "June",
-                  "July", "August", "September", "October", "November", "December"];
+    var deathsByGroup = {};
+    var selectedDeath = null;
 
-    $("#eventFilter").on("input", function() {
-      refreshEventList();
-    });
-    $("#selectAll").on("click", function() {
-      for(var i = 0; i < deaths.length; i++) {
-        deaths[i].selected = true;
+    var maxRadius = 25;    
+    var radiusScale, colorScale;
+
+    // Helper functions
+    var keys = {
+      all: function(death)  { return "All"; },
+      place: function(death) { return stateNames[death.state]; },
+      race: function(death) { return death.raceethnicity; },
+      manner: function(death) { return death.classification; },
+      month: function(death) { return death.month; },
+      monthIndex: function(death) { return months.indexOf(death.month.toLowerCase()); },
+      volume: function(death) { return +death.volume; },
+      tone: function(death) { return +death.tone; }
+    }
+    var sortDirections = {
+      monthIndex: "ascending",
+      volume: "descending",
+      tone: "ascending" 
+    }
+
+    var currentGroupingKey = keys.place;
+    var currentColorKey = keys.race;
+    var currentSizeKey = keys.volume;
+    var currentSortingKey = keys.monthIndex;
+    var currentSortDirection = "ascending";
+
+    function renderLegend(legend, entries, scale, attrA, attrB) {
+      var entryWidth = 110;
+      var entryHeight = 80;
+      var entryRadius = 30;
+      var legendEntries = 
+        legend
+          .selectAll('.legend-step')
+          .data(entries, d3.identity);
+      var legendEntering = legendEntries.enter()
+        .append('svg')
+        .attr('class', 'legend-step')
+        .attr('width', entryWidth)
+        .attr('height', entryHeight);
+      legendEntering
+        .append('rect')
+        .attr('fill', 'white')
+        .attr('stroke', '#3d3d4c')
+        .attr('stroke-width', '3px')
+        .attr('width', entryRadius)
+        .attr('height', entryRadius)
+        .attr('rx', 3)
+        .attr('ry', 3);
+      legendEntering
+        .append('text')
+        .attr('x', entryWidth / 2)
+        .attr('y', 10)
+        .attr('font-size', 11)
+        .attr('dy', '.35em')
+        .attr('fill', 'white')
+        .attr('text-anchor', 'middle')
+        .text(d3.identity);
+        
+      legendEntries
+        .selectAll('rect')
+        .attr('x', function(entry) { return (entryWidth / 2) - ((+scale(entry) / 2) || entryRadius / 2); })
+        .attr('y', function(entry) { return (entryWidth / 2) - ((+scale(entry) / 2) || entryRadius / 2); })
+        .attr(attrA, function(entry) { return scale(entry); });
+      if(attrB) {
+        legendEntries
+          .selectAll('rect')
+          .attr(attrB, function(entry) { return scale(entry); });        
       }
-      refreshEventList();
-      refreshChart();
-    });
-    $("#selectNone").on("click", function() {
-      for(var i = 0; i < deaths.length; i++) {
-        deaths[i].selected = false;
-      }
-      refreshEventList();
-      refreshChart();
+
+      legendEntries.exit().remove();
+      legendEntries.order();
+      
+    }   
+    
+    // Color legend functions
+    function renderQuantitativeColorLegend() {
+      // Select 5 elements, linearly distributed over the extents
+      var extents = d3.extent(deaths, currentColorKey);
+      var tempScale = 
+        d3.scale
+          .linear()
+          .domain([0,5])
+          .range(extents);
+      var entries = [0, 1, 2, 3, 4, 5].map(function(e) { return d3.round(tempScale(e), 2); });
+      renderLegend(d3.select('.legend-color'), entries, colorScale, 'fill');
+    }
+    function renderQualitativeColorLegend() {
+      // Pick out the distinct elements
+      var distinctKeys = d3.map(deaths, currentColorKey).keys();
+      renderLegend(d3.select('.legend-color'), distinctKeys, colorScale, 'fill');
+    }
+    var renderCurrentColorLegend = renderQualitativeColorLegend;
+    
+
+    $("#groupingSelection").change(function(evt) {
+      currentGroupingKey = keys[evt.target.value];
+      regenerateGroups();
+      render();
     });
 
+    $("#colorSelection").change(function(evt) {
+      currentColorKey = keys[evt.target.value];
+      recomputeColorScale();
+      render();
+    });
+
+    $("#sizeSelection").change(function(evt) {
+      currentSizeKey = keys[evt.target.value];
+      recomputeRadiusScale();
+      render();
+    });
+
+    $("#orderingSelection").change(function(evt) {
+      currentSortingKey = keys[evt.target.value];
+      currentSortDirection = sortDirections[evt.target.value];
+      resortGroups();
+      render();
+    });
+    
+    function recomputeRadiusScale() {
+      radiusScale = 
+        d3.scale.linear()
+          .domain(d3.extent(deaths, currentSizeKey))
+          .range([5,maxRadius-5])
+          .clamp(true);
+    }
+
+    function recomputeColorScale() {
+      if(currentColorKey === keys.tone) {
+        colorScale = 
+          d3.scale.linear()
+            .domain(d3.extent(deaths, currentColorKey))
+            .range(["red", "blue"]);
+        renderCurrentColorLegend = renderQuantitativeColorLegend;
+      } else {
+        var count = d3.map(deaths, currentColorKey).size();
+        if(count <= 10) {
+          colorScale = d3.scale.category10();
+        } else {
+          colorScale = d3.scale.category20();
+        }
+        renderCurrentColorLegend = renderQualitativeColorLegend;
+      }
+    }
 
     // Load the dataset
     d3.csv('data/all-events.csv', function(err, result) {
@@ -71,54 +307,108 @@
         console.error('Error loading data:', err);
       }
       deaths = result;
-
+      
       refreshData();
     });
-    //
+
     function refreshData() {
-      refreshEventList();
-      refreshChart();
+      recomputeRadiusScale();
+      recomputeColorScale();
+      regenerateGroups();
+      render();
+    }
+    
+    function regenerateGroups() {
+      deathsByGroup = 
+        d3.nest()
+          .key(currentGroupingKey)
+          .entries(deaths);
+      resortGroups();
     }
 
-    function refreshEventList() {
-        var eventList = d3.select('#eventList ul');
-        var filter = $("#eventFilter").val();
-
-        var filteredDeaths = deaths.filter(function(death) { return death.name.toLowerCase().indexOf((filter || '').toLowerCase()) > -1; });
-
-        var changes = eventList.selectAll('li').data(filteredDeaths, function(death) { return death.uid; });
-
-        changes.enter()
-          .append('li');
-        changes.exit()
-          .remove();
-        changes
-          .text(function(death) { return death.name; })
-          .attr('class', function(death) { return death.selected ? 'selected' : ''; })
-          .on("click", function(death) {
-            death.selected = !death.selected;
-            refreshEventList();
-            refreshChart();
-          });
-        changes.sort(function(a,b) { return d3.ascending(a.name, b.name); });
-    }
-    function refreshChart() {
-      var selectedDeaths = deaths.filter(function(d) { return d.selected; });
-      var deathsByMonth = d3.nest()
-        .key(function(d) { return d.month; })
-        .sortKeys(function(a,b) { return d3.ascending(months.indexOf(a), months.indexOf(b)); })
-        .entries(selectedDeaths);
-
-        var chart = d3.select("#graph ul");
-        var changes = chart.selectAll('li').data(deathsByMonth, function(group) { if(group) return group.key; else return "ungrouped"; });
-        changes.enter()
-          .append('li');
-        changes.exit()
-          .remove();
-        changes
-          .text(function(m) { console.log(m); return m.key + ': ' + m.values.length + ' events'; });
-        changes.order();
+    function resortGroups() {
+      for(var i = 0; i < deathsByGroup.length; i++) {
+        deathsByGroup[i].values.sort(function(a, b) { return d3[currentSortDirection](currentSortingKey(a), currentSortingKey(b)); });
+      }
     }
 
+    function render() {
+      // Setup groups: append a div for each group
+      var groups = 
+        d3.select('.grid')
+          .selectAll('div.group')
+          .data(deathsByGroup, function(group) { return group.key; });
+      
+      // New groups get an h3 with the group display name
+      var groupsEntering = 
+        groups.enter()
+              .append('div')
+              .attr('class', 'row group')
+              .append('h3').text(function(group) { return group.key + " (" + group.values.length + ")"; });
+      
+      // Remove groups that don't exist anymore
+      var groupsExiting =
+        groups.exit()
+              .remove();
+
+      // Setup death circles: append an SVG > Circle for each death in the group
+      var deaths = 
+        groups.selectAll('svg.deaths')
+              .data(function(group) { return group.values; },
+                    function(death) { return death.uid; });
+
+      var deathsEntering = 
+        deaths.enter()
+              .append('svg')
+              .attr('class', 'deaths')
+              .attr('width', maxRadius * 2)
+              .attr('height', maxRadius * 2)
+              .append('rect', maxRadius)
+              .attr('rx', 3)
+              .attr('ry', 3)
+              .on('click', focus)
+              .append('title')
+              .text(function(death) { return death.name; });
+
+      // Set the radius to our radius key and the color to our color key
+      deaths.selectAll('rect')
+        .attr('x', function(death) { return maxRadius - radiusScale(currentSizeKey(death)); })
+        .attr('y', function(death) { return maxRadius - radiusScale(currentSizeKey(death)); })
+        .attr('width', function(death) { return 2*radiusScale(currentSizeKey(death)); })
+        .attr('height', function(death) { return 2*radiusScale(currentSizeKey(death)); })
+        .attr('fill', function(death) { return colorScale(currentColorKey(death));})
+        .attr('stroke-width', function(death) { return death === selectedDeath ? '8px' : '3px'; })
+        .attr('stroke', "#3d3d4c");
+        
+      var deathsExiting =
+        deaths.exit()
+              .remove();
+
+      // Make sure they're in the order we expect              
+      deaths.order();
+      
+      // Set up the size legend: choose the steps we want, and run it backwards through the radius scale
+      var round = function(x) { return d3.round(x, 2); }
+      var sizeLegendSteps = [5, 10, 15, 20, 25].map(radiusScale.invert).map(round);
+      renderLegend(d3.select('.legend-size'), sizeLegendSteps, function(entry) { return 2*radiusScale(entry); }, 'width', 'height');
+      
+      // Set up the color legend
+      renderCurrentColorLegend();
+    }
+    
+    function focus(death) {
+      selectedDeath = death;
+      console.log(death);
+      $(".details").removeClass("hidden");
+      $("#name-details").text(death.name);
+      $("#age-details").text(death.age);
+      $("#race-details").text(death.raceethnicity);
+      $("#place-details").text(stateNames[death.state]);
+      $("#gender-details").text(death.gender);
+      $("#manner-details").text(death.classification);
+      $("#volume-details").text(death.volume);
+      $("#tone-details").text(death.tone || d3.random.normal(.5, .5)());
+      render();
+    }
   </script>
 </html>
