@@ -18,7 +18,7 @@
         <div class="col-md-2"><h2>Order</h2></div>
         <div class="project-title col-md-3 col-md-offset-1">
           <h2>Media Coverage Explorer</h2>
-          <p class="subtitle">Exploration of news articles on "The Counted" dataset</p>
+          <p class="subtitle">Exploration of News Articles on '15/'16 Deaths in US Police Custody</p>
         </div>
       </div>
       <div class="row dropdowns">
@@ -279,8 +279,7 @@
       radiusScale = 
         d3.scale.linear()
           .domain(d3.extent(deaths, currentSizeKey))
-          .range([5,maxRadius-5])
-          .clamp(true);
+          .range([5,maxRadius-5]);
     }
 
     function recomputeColorScale() {
@@ -377,7 +376,7 @@
         .attr('width', function(death) { return 2*radiusScale(currentSizeKey(death)); })
         .attr('height', function(death) { return 2*radiusScale(currentSizeKey(death)); })
         .attr('fill', function(death) { return colorScale(currentColorKey(death));})
-        .attr('stroke-width', function(death) { return death === selectedDeath ? '8px' : '3px'; })
+        .attr('stroke-width', function(death) { return death === selectedDeath ? '3px' : '0px'; })
         .attr('stroke', "#3d3d4c");
         
       var deathsExiting =
