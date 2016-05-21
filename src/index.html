@@ -112,6 +112,7 @@
           </div>
           <h3 id="article-header">Relevant Articles</h3>
           <div id="article-details">
+            <h4 id="article-loading-indicator">Loading...</h4>
             <ul>
             </ul>
           </div>
@@ -359,6 +360,7 @@
       if(err) {
         console.error('Error loading sources: ', err);
       }
+      $('#article-loading-indicator').hide();
       articles = result;
       
       for(var i = 0; i < articles.length; i++) {
@@ -372,6 +374,7 @@
       if(selectedDeath) {
         focus(selectedDeath);
       }
+        
     });
 
     function refreshData() {
