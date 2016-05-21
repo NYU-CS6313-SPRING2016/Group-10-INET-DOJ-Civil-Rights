@@ -369,7 +369,6 @@
         articlesByUID[article.uid].push(article);
       }
       
-      console.log('Articles loaded');
       if(selectedDeath) {
         focus(selectedDeath);
       }
@@ -462,7 +461,6 @@
     
     function focus(death) {
       selectedDeath = death;
-      console.log(death);
       $(".details").removeClass("hidden");
       $("#name-details").text(death.name);
       $("#age-details").text(death.age);
@@ -474,9 +472,7 @@
       $("#agency-details").text(death.lawenforcementagency);
       $("#volume-details").text(death.volume);
       $("#tone-details").text(death.tone || d3.random.normal(.5, .5)());
-      
-      console.log(articlesByUID);
-      
+            
       if(articlesByUID[death.uid]) {
         $('#article-header').text('Relevant Articles (' + articlesByUID[death.uid].length + ')');
         
